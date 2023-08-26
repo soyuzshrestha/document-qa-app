@@ -22,23 +22,25 @@ def query(input):
     end = timeit.default_timer()
 
     answer = response["result"]
+    references = ""
+    responsetime = ""
 
     # Process source documents
     source_docs = response['source_documents']
     for i, doc in enumerate(source_docs):
-        references = f'\nSource Document {i+1}\n' \
+        references = references + f'\nSource Document {i+1}\n' \
             +  f'Source Text: {doc.page_content}' \
             + f'Document Name: {doc.metadata["source"]}' \
             + f'Page Number: {doc.metadata["page"]}\n' \
             + '='* 60
         responsetime = f"Time to retrieve response: {end - start}"
 
-    answer = answer + " " + references + " " + responsetime
-    return answer
+    references = references + " " + responsetime
+    return answer, references
 
 demo = gr.Interface(fn=query,
                     inputs=gr.Textbox(lines=5, label="Input Text"),
-                    outputs=gr.Textbox(label="Generated Text"))
+                    outputs=[gr.Textbox(label="Answer Text"),gr.Textbox(label="Source Text")])
     
 if __name__ == "__main__":
     demo.launch()
