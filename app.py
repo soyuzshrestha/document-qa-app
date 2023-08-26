@@ -26,20 +26,19 @@ def query(input):
     # Process source documents
     source_docs = response['source_documents']
     for i, doc in enumerate(source_docs):
-        print(f'\nSource Document {i+1}\n')
-        print(f'Source Text: {doc.page_content}')
-        print(f'Document Name: {doc.metadata["source"]}')
-        print(f'Page Number: {doc.metadata["page"]}\n')
-        print('='* 60)
+        references = f'\nSource Document {i+1}\n' \
+            +  f'Source Text: {doc.page_content}' \
+            + f'Document Name: {doc.metadata["source"]}' \
+            + f'Page Number: {doc.metadata["page"]}\n' \
+            + '='* 60
+        responsetime = f"Time to retrieve response: {end - start}"
 
-    responsetime = f"Time to retrieve response: {end - start}"
-
-    answer = answer + " " + source_docs + " " + responsetime
+    answer = answer + " " + references + " " + responsetime
     return answer
 
 demo = gr.Interface(fn=query,
-                    inputs=gr.inputs.Textbox(lines=5, label="Input Text"),
-                    outputs=gr.outputs.Textbox(label="Generated Text"))
+                    inputs=gr.Textbox(lines=5, label="Input Text"),
+                    outputs=gr.Textbox(label="Generated Text"))
     
 if __name__ == "__main__":
-    demo.launch() 
+    demo.launch()
